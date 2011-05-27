@@ -1,0 +1,22 @@
+name:                 HSWT
+version:              0.1
+cabal-version:        >= 1.2
+build-type:           Simple
+data-files:           src/Language/Java/SWT/NativeListener.class
+extra-source-files:   src/Language/Java/SWT/NativeListener.java
+
+library
+  hs-source-dirs:  src
+  build-depends:   base, containers, mtl, filepath, HJVM
+  ghc-options:     -O2 -Wall
+  exposed-modules: Language.Java.SWT.SWT
+
+executable button
+  hs-source-dirs:  test, src
+  build-depends:   base, containers, mtl, filepath, HJVM
+  ghc-options:     -O2 -Wall
+  main-is:         ButtonTest.hs
+  other-modules:   Language.Java.SWT.SWT
+  extra-libraries: jvm
+  extra-lib-dirs:  d:\Documents\perso\workspace\HJVM\src  d:\dev\java\jdk1.6.0_07\jre\bin\client
+  include-dirs:    d:\dev\java\jdk1.6.0_07\include d:\dev\java\jdk1.6.0_07\include\win32

@@ -9,13 +9,13 @@ import Control.Monad
 import Control.Monad.State
 import Foreign.C
 
-type SWTT = StateT (CallbackMapRef,JClassPtr) (StateT JRuntimePtr IO)
+type SWTT = StateT (CallbackMapRef,JClassPtr) IO
 
-instance WithJava SWTT where
-        withJavaRT f = do
-                rt<-lift $ get
-                r<-liftIO $ f rt
-                return r
+--instance WithJava SWTT where
+--        withJavaRT f = do
+--                rt<-lift $ get
+--                r<-liftIO $ f rt
+--                return r
 
 withSWT :: String -> SWTT a -> IO (a)
 withSWT options f=do

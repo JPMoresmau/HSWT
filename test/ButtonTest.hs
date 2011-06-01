@@ -48,19 +48,17 @@ main = do
           text2<-toJString "Click me"
           voidMethod button "setText" "(Ljava/lang/String;)V" [JObj text2]
           
-          let cb=(\e->do
+          let cb=(\_->do
                         liftIO $ putStrLn ("button clicked")
-                        withJavaRT (\rt -> do
-                                modifyMVar count (\c->do
-                                        let nc=c+1
-                                        let s=if nc==1 then "once." else ((show nc)++ " times.")
-                                        evalStateT (do
-                                                text3<-toJString ("Clicked "++s)
-                                                voidMethod button "setText" "(Ljava/lang/String;)V" [JObj text3]
-                                                ) rt
-                                        return(nc,())
-                                     )
-                                )
+                       
+                        modifyMVar count (\c->do
+                                let nc=c+1
+                                let s=if nc==1 then "once." else ((show nc)++ " times.")
+                                text3<-toJString ("Clicked "++s)
+                                voidMethod button "setText" "(Ljava/lang/String;)V" [JObj text3]
+                                return(nc,())
+                             )
+                                
                         )
           
           --listener<-newObject listenerCls "(I)V" [JInt index]

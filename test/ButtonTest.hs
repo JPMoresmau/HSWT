@@ -36,17 +36,17 @@ main = do
           shell<-newObject shellCls "(Lorg/eclipse/swt/widgets/Display;)V" [JObj display]
           
           text<-toJString "Hello SWT From Haskell"
-          voidMethod shell "setText" "(Ljava/lang/String;)V" [JObj text]
-          voidMethod shell "setSize" "(II)V" [JInt 300,JInt 200]
+          voidMethod shell (buttonCls,"setText","(Ljava/lang/String;)V") [JObj text]
+          voidMethod shell (buttonCls,"setSize","(II)V") [JInt 300,JInt 200]
 
           layout<-newObject layoutCls "()V" []
           
-          voidMethod shell "setLayout" "(Lorg/eclipse/swt/widgets/Layout;)V" [JObj layout]
+          voidMethod shell (shellCls,"setLayout","(Lorg/eclipse/swt/widgets/Layout;)V") [JObj layout]
          
           button<-newObject buttonCls "(Lorg/eclipse/swt/widgets/Composite;I)V" [JObj shell,JInt 8]  -- SWT.PUSH
           
           text2<-toJString "Click me"
-          voidMethod button "setText" "(Ljava/lang/String;)V" [JObj text2]
+          voidMethod button (buttonCls,"setText","(Ljava/lang/String;)V") [JObj text2]
           
           let cb=(\_->do
                         liftIO $ putStrLn ("button clicked")
@@ -55,7 +55,7 @@ main = do
                                 let nc=c+1
                                 let s=if nc==1 then "once." else ((show nc)++ " times.")
                                 text3<-toJString ("Clicked "++s)
-                                voidMethod button "setText" "(Ljava/lang/String;)V" [JObj text3]
+                                voidMethod button (buttonCls,"setText","(Ljava/lang/String;)V") [JObj text3]
                                 return(nc,())
                              )
                                 
@@ -67,10 +67,9 @@ main = do
                         
           addSWTCallBack button 13 cb
           
-          voidMethod shell "open" "()V" []
-          
+          voidMethod shell (shellCls,"open","()V") []
           displayLoop display shell
           
-          voidMethod display "dispose" "()V" []
+          voidMethod display (displayCls,"dispose","()V") []
           )
  

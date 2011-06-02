@@ -32,18 +32,18 @@ addSWTCallBack widget eventid cb=do
         index<-liftIO $ addCallBack cmr cb
         listener<-lift $ newObject listenerCls "(I)V" [JInt index]
         liftIO $ putStrLn ("listener:"++(show listener))
-        lift $ voidMethod widget "addListener" "(ILorg/eclipse/swt/widgets/Listener;)V" [JInt eventid,JObj listener]
+        lift $ voidMethod widget ("org/eclipse/swt/widgets/Widget","addListener","(ILorg/eclipse/swt/widgets/Listener;)V") [JInt eventid,JObj listener]
         
 
 displayLoop :: JObjectPtr -> JObjectPtr -> SWTT()
 displayLoop display shell= 
        do
-               shellIsDisposed<-lift $ booleanMethod shell "isDisposed" "()Z" []
+               shellIsDisposed<-lift $ booleanMethod shell ("org/eclipse/swt/widgets/Widget","isDisposed","()Z") []
                when (not shellIsDisposed) (do 
-                        displayDispatch<-lift $ booleanMethod display "readAndDispatch" "()Z" []
+                        displayDispatch<-lift $ booleanMethod display ("org/eclipse/swt/widgets/Display","readAndDispatch","()Z") []
                         when (not displayDispatch) (
-                                lift $ voidMethod display "sleep" "()V" []
-                             )
+                                lift $ voidMethod display ("org/eclipse/swt/widgets/Display","sleep","()Z") []
+                                )
                         displayLoop display shell
                    )
 

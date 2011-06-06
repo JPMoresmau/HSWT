@@ -24,42 +24,36 @@ main = do
       withSWT ("-Djava.class.path="++cp) (do
       --putStrLn (show ret)
       --when (ret>(-1)) (do
-          displayCls<- findClass "org/eclipse/swt/widgets/Display"
-          shellCls<- findClass "org/eclipse/swt/widgets/Shell"
-          layoutCls<- findClass "org/eclipse/swt/layout/FillLayout"
-          buttonCls<- findClass "org/eclipse/swt/widgets/Button"
-          --listenerCls<-lift $ findClass "Language/Java/SWT/NativeListener" 
+           --listenerCls<-lift $ findClass "Language/Java/SWT/NativeListener" 
           --liftIO $ putStrLn ("listenerCls:"++(show listenerCls)) 
           
-          display<-newObject displayCls "()V" []
+          display<-newObject "org/eclipse/swt/widgets/Display" "()V" []
           
-          shell<-newObject shellCls "(Lorg/eclipse/swt/widgets/Display;)V" [JObj display]
+          shell<-newObject "org/eclipse/swt/widgets/Shell" "(Lorg/eclipse/swt/widgets/Display;)V" [JObj display]
           
           text<-toJString "Hello SWT From Haskell"
-          voidMethod shell (buttonCls,"setText","(Ljava/lang/String;)V") [JObj text]
-          voidMethod shell (buttonCls,"setSize","(II)V") [JInt 300,JInt 200]
+          voidMethod shell (Method "org/eclipse/swt/widgets/Shell" "setText" "(Ljava/lang/String;)V") [JObj text]
+          voidMethod shell (Method "org/eclipse/swt/widgets/Shell" "setSize" "(II)V") [JInt 300,JInt 200]
 
-          layout<-newObject layoutCls "()V" []
+          layout<-newObject "org/eclipse/swt/layout/FillLayout" "()V" []
           
-          voidMethod shell (shellCls,"setLayout","(Lorg/eclipse/swt/widgets/Layout;)V") [JObj layout]
+          voidMethod shell (Method "org/eclipse/swt/widgets/Shell" "setLayout" "(Lorg/eclipse/swt/widgets/Layout;)V") [JObj layout]
          
-          button<-newObject buttonCls "(Lorg/eclipse/swt/widgets/Composite;I)V" [JObj shell,JInt 8]  -- SWT.PUSH
+          button<-newObject "org/eclipse/swt/widgets/Button" "(Lorg/eclipse/swt/widgets/Composite;I)V" [JObj shell,JInt 8]  -- SWT.PUSH
           
           text2<-toJString "Click me"
-          voidMethod button (buttonCls,"setText","(Ljava/lang/String;)V") [JObj text2]
+          voidMethod button (Method "org/eclipse/swt/widgets/Button" "setText" "(Ljava/lang/String;)V") [JObj text2]
           
           let cb=(\_->do
                         liftIO $ putStrLn ("button clicked")
-                       
-                        modifyMVar count (\c->do
+                        nc<-liftIO $ modifyMVar count (\c->do
                                 let nc=c+1
-                                let s=if nc==1 then "once." else ((show nc)++ " times.")
-                                text3<-toJString ("Clicked "++s)
-                                voidMethod button (buttonCls,"setText","(Ljava/lang/String;)V") [JObj text3]
-                                return(nc,())
+                                return(nc,nc)
                              )
-                                
-                        )
+                        let s=if nc==1 then "once." else ((show nc)++ " times.")
+                        text3<-toJString ("Clicked "++s)
+                        voidMethod button (Method "org/eclipse/swt/widgets/Button" "setText" "(Ljava/lang/String;)V") [JObj text3]
+                        )        
           
           --listener<-newObject listenerCls "(I)V" [JInt index]
           --liftIO $ putStrLn ("listener:"++(show listener))
@@ -67,9 +61,9 @@ main = do
                         
           addSWTCallBack button 13 cb
           
-          voidMethod shell (shellCls,"open","()V") []
+          voidMethod shell (Method "org/eclipse/swt/widgets/Shell" "open" "()V") []
           displayLoop display shell
           
-          voidMethod display (displayCls,"dispose","()V") []
+          voidMethod display (Method "org/eclipse/swt/widgets/Display" "dispose" "()V") []
           )
  

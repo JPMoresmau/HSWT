@@ -1,0 +1,6 @@
+The HSWT project allows Haskell code to launch a SWT UI through the HJVM library.
+
+The aim is to provide a native looking, cross platform UI solution to Haskell developers.
+
+Also, to do something crazy involving Haskell, C, and Java. Fun, I tell you.
+
